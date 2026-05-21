@@ -56,7 +56,9 @@ Future playback modes to implement:
 ```text
 dilla-microchop/
 ├── microchop_sampler.py          # main microchop one-shot renderer
+├── microchop_desktop_app.py      # local desktop render/export app
 ├── microchop_requirements.txt    # focused Python dependencies
+├── app-daw/                      # app packaging and DAW plugin roadmap
 ├── original_sample/              # optional local-only sample input folder
 ├── demo_artifacts/               # public demo render and Ableton analysis file
 ├── output/                       # generated renders, chops, manifests, reports
@@ -106,8 +108,27 @@ provided MIDI file.
   --bar-start 8 \
   --bar-count 8 \
   --playback-mode one-shot \
+  --style-mode fixed \
   --max-chops 256
 ```
+
+## Run The Desktop App
+
+```bash
+./microchop_venv/bin/python microchop_desktop_app.py
+```
+
+The desktop app uses the same render engine as the CLI and provides local file
+pickers for the sample, MIDI file, output folder, bar range, playback mode, and
+style mode.
+
+Supported playback modes are `one-shot`, `gated`, `loop-forward`,
+`loop-forward-reverse`, `loop-reverse-forward`, `stretch`, and
+`slice-sequence`.
+
+Supported style modes are `fixed`, `round-robin`, `random-chop`,
+`random-playback`, `weighted-random`, `velocity-style`, `note-range-style`,
+`alternating-style`, and `humanized-style`.
 
 Each run writes an isolated folder under `output/`:
 

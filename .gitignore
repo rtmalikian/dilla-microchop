@@ -4,9 +4,12 @@ __pycache__/
 
 microchop_venv/
 output/
+build/
+dist/
 microchop_midigen/
 midigen_scripts/
 backups/20260521_remove_private_midigen/
+backups/20260521_app_daw_implementation/
 
 # Keep proof-of-concept source recordings local unless rights are cleared.
 original_sample/

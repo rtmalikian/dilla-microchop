@@ -29,3 +29,8 @@
 - 2026-05-21: Backed up this log to `backups/20260521_app_daw_prompt/` before
   adding `app-daw/LLM_PROMPT.md` with the desktop app and future DAW plugin
   implementation prompt.
+- 2026-05-21: Backed up `microchop_sampler.py`, `microchop_requirements.txt`,
+  `README.md`, `.gitignore`, and this log to
+  `backups/20260521_app_daw_implementation/` before implementing the shared
+  render entry point, desktop app wrapper, playback/style mode expansion, and
+  app packaging documentation.
