@@ -100,8 +100,6 @@ output/microchop_<timestamp>/
 ├── chops/*.wav
 ├── manifests/chops.json
 ├── renders/main_melody_bars_8_16_microchop.wav
-├── renders/main_melody_bars_8_16_reference.mid
-├── renders/main_melody_bars_8_16_reference.wav
 ├── renders/note_event_map.json
 └── reports/
     ├── coverage_report.json
@@ -119,8 +117,7 @@ output/microchop_<timestamp>/
 7. Match MIDI notes to exact or nearby pitched chops.
 8. Pitch-shift nearby chops to the MIDI note target.
 9. Render the verse melody as overlapping one-shot microchops.
-10. Export the same 8-bar phrase as reference MIDI and a simple diagnostic tone WAV.
-11. Write diagnostics showing chop coverage, pitch-shift distances, and weak
+10. Write diagnostics showing chop coverage, pitch-shift distances, and weak
     note coverage.
 
 ## SEO Keywords

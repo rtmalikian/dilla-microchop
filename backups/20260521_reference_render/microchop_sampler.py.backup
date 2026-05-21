@@ -346,100 +346,6 @@ def extract_midi_events(midi_path: Path, target_track: str, bar_start: int, bar_
     return events, info
 
 
-def tempo_from_midi(midi_path: Path) -> int:
-    mid = mido.MidiFile(midi_path)
-    for track in mid.tracks:
-        for msg in track:
-            if msg.type == "set_tempo":
-                return int(msg.tempo)
-    return int(mido.bpm2tempo(120))
-
-
-def render_reference_outputs(
-    run_dir: Path,
-    args: argparse.Namespace,
-    midi_events: list[MidiNoteEvent],
-    midi_info: dict[str, Any],
-    midi_path: Path,
-    sample_rate: int,
-    channels: int,
-) -> dict[str, Any]:
-    renders_dir = run_dir / "renders"
-    renders_dir.mkdir(parents=True, exist_ok=True)
-    stem = f"{args.target_track.lower().replace(' ', '_')}_bars_{args.bar_start}_{args.bar_start + args.bar_count}"
-    midi_out = renders_dir / f"{stem}_reference.mid"
-    wav_out = renders_dir / f"{stem}_reference.wav"
-
-    tempo = tempo_from_midi(midi_path)
-    numerator, denominator = (int(v) for v in midi_info["time_signature"].split("/", 1))
-    ticks_per_beat = int(midi_info["ticks_per_beat"])
-    ticks_per_bar = int(midi_info["ticks_per_bar"])
-    excerpt_ticks = int(args.bar_count * ticks_per_bar)
-
-    ref_mid = mido.MidiFile(type=1, ticks_per_beat=ticks_per_beat)
-    meta_track = mido.MidiTrack()
-    meta_track.append(mido.MetaMessage("set_tempo", tempo=tempo, time=0))
-    meta_track.append(mido.MetaMessage("time_signature", numerator=numerator, denominator=denominator, time=0))
-    meta_track.append(mido.MetaMessage("end_of_track", time=excerpt_ticks))
-    ref_mid.tracks.append(meta_track)
-
-    note_track = mido.MidiTrack()
-    note_track.name = f"{args.target_track} bars {args.bar_start}-{args.bar_start + args.bar_count}"
-    note_track.append(mido.MetaMessage("track_name", name=note_track.name, time=0))
-    midi_messages: list[tuple[int, mido.Message]] = []
-    start_tick_offset = int(args.bar_start * ticks_per_bar)
-    for event in midi_events:
-        rel_start = max(0, int(event.start_tick - start_tick_offset))
-        rel_end = max(rel_start + 1, int(event.end_tick - start_tick_offset))
-        midi_messages.append((
-            rel_start,
-            mido.Message("note_on", note=event.note, velocity=event.velocity, channel=event.channel, time=0),
-        ))
-        midi_messages.append((
-            rel_end,
-            mido.Message("note_off", note=event.note, velocity=0, channel=event.channel, time=0),
-        ))
-    last_tick = 0
-    for tick, msg in sorted(midi_messages, key=lambda item: (item[0], item[1].type == "note_on")):
-        msg.time = max(0, tick - last_tick)
-        note_track.append(msg)
-        last_tick = tick
-    note_track.append(mido.MetaMessage("end_of_track", time=max(0, excerpt_ticks - last_tick)))
-    ref_mid.tracks.append(note_track)
-    ref_mid.save(midi_out)
-
-    duration = float(mido.tick2second(excerpt_ticks, ticks_per_beat, tempo))
-    audio = np.zeros((max(1, int(math.ceil(duration * sample_rate))), channels), dtype=np.float32)
-    for event in midi_events:
-        start = int(round(event.start_sec * sample_rate))
-        length = max(1, int(round(event.duration_sec * sample_rate)))
-        end = min(audio.shape[0], start + length)
-        if end <= start:
-            continue
-        t = np.arange(end - start, dtype=np.float32) / float(sample_rate)
-        freq = midi_to_hz(event.note)
-        sine = np.sin(2.0 * np.pi * freq * t)
-        triangle = (2.0 / np.pi) * np.arcsin(sine)
-        tone = (0.18 * (event.velocity / 127.0) * triangle).astype(np.float32)
-        fade_len = min(int(sample_rate * 0.004), max(1, len(tone) // 2))
-        tone[:fade_len] *= np.linspace(0.0, 1.0, fade_len, dtype=np.float32)
-        tone[-fade_len:] *= np.linspace(1.0, 0.0, fade_len, dtype=np.float32)
-        audio[start:end] += tone[:, None]
-    peak = float(np.max(np.abs(audio))) if audio.size else 0.0
-    if peak > 0.95:
-        audio *= 0.95 / peak
-    sf.write(wav_out, audio, sample_rate)
-
-    return {
-        "reference_midi": str(midi_out),
-        "reference_wav": str(wav_out),
-        "reference_note_events": len(midi_events),
-        "reference_duration_sec": float(audio.shape[0] / sample_rate),
-        "reference_peak": float(np.max(np.abs(audio))) if audio.size else 0.0,
-        "reference_peak_dbfs": db_peak(audio),
-    }
-
-
 def build_chop_index(chops: list[dict[str, Any]]) -> dict[int, list[dict[str, Any]]]:
     index: dict[int, list[dict[str, Any]]] = defaultdict(list)
     for chop in chops:
@@ -565,7 +471,6 @@ def write_reports(
     midi_info: dict[str, Any],
     event_map: list[dict[str, Any]],
     render_stats: dict[str, Any],
-    reference_stats: dict[str, Any],
 ) -> None:
     reports_dir = run_dir / "reports"
     reports_dir.mkdir(parents=True, exist_ok=True)
@@ -590,7 +495,6 @@ def write_reports(
         "pitch_shifted_notes": [{"midi_note": n, "note_name": note_name(n)} for n in shifted_notes],
         "weak_or_over_limit_events": weak_events,
         "render_stats": render_stats,
-        "reference_outputs": reference_stats,
     }
     (reports_dir / "coverage_report.json").write_text(json.dumps(coverage, indent=2) + "\n")
 
@@ -608,9 +512,6 @@ def write_reports(
         f"- Weak/over-limit events: {len(weak_events)}",
         f"- Render duration: {render_stats['duration_sec']:.2f}s",
         f"- Render peak: {render_stats['peak']:.4f} ({render_stats['peak_dbfs']:.2f} dBFS)",
-        f"- Reference MIDI: `{reference_stats['reference_midi']}`",
-        f"- Reference WAV: `{reference_stats['reference_wav']}`",
-        f"- Reference duration: {reference_stats['reference_duration_sec']:.2f}s",
     ]
     if midi_info.get("warning"):
         summary.append(f"- Warning: {midi_info['warning']}")
@@ -662,23 +563,12 @@ def main() -> None:
     chops = make_chops(args, run_dir)
     midi_events, midi_info = extract_midi_events(midi_path, args.target_track, args.bar_start, args.bar_count)
     render_path, event_map, render_stats = render_events(args, run_dir, midi_events, chops)
-    reference_stats = render_reference_outputs(
-        run_dir,
-        args,
-        midi_events,
-        midi_info,
-        midi_path,
-        int(render_stats["sample_rate"]),
-        int(render_stats["channels"]),
-    )
-    write_reports(run_dir, args, chops, midi_events, midi_info, event_map, render_stats, reference_stats)
+    write_reports(run_dir, args, chops, midi_events, midi_info, event_map, render_stats)
 
     print(json.dumps({
         "run_dir": str(run_dir),
         "midi": str(midi_path),
         "render": str(render_path),
-        "reference_midi": reference_stats["reference_midi"],
-        "reference_wav": reference_stats["reference_wav"],
         "chops": len(chops),
         "pitched_chops": sum(1 for c in chops if c.get("pitched")),
         "midi_events": len(midi_events),

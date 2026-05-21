@@ -9,6 +9,3 @@
 - Added `microchop_requirements.txt` with focused audio/MIDI dependencies.
 - Added `README.md` with setup and proof-render commands.
 - No existing source files were modified; `midigen_scripts/` was left intact.
-- 2026-05-21: Backed up `microchop_sampler.py`, `README.md`, and this log to
-  `backups/20260521_reference_render/` before adding 8-bar reference MIDI and
-  diagnostic WAV outputs for direct comparison with the microchop render.
