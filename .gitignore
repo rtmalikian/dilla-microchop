@@ -18,3 +18,7 @@ original_sample/
 *.flac
 *.mid
 *.midi
+
+# Public demo artifacts are intentionally allowed in the repository.
+!demo_artifacts/
+!demo_artifacts/**

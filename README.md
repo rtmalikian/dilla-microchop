@@ -68,6 +68,17 @@ dilla-microchop/
 `original_sample/`, `output/`, and `microchop_venv/` are gitignored so large
 audio files, generated renders, and local environments are not published.
 
+## Included Demo Artifacts
+
+The repository includes only the public comparison output in
+`demo_artifacts/ableton_output/`:
+
+- `main_melody_bars_8_16_microchop.wav` — the final microchop render
+- `main_melody_bars_8_16_microchop.wav.asd` — the Ableton analysis file
+
+The copyrighted source sample, generated chops, raw run folders, and reference
+audio assets are intentionally excluded from GitHub.
+
 ## Setup
 
 Create the required virtual environment:

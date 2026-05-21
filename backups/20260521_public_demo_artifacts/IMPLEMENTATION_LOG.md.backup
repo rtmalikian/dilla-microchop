@@ -1,0 +1,17 @@
+# Implementation Log
+
+- Added `microchop_midigen/` as an isolated MIDI-generation copy from
+  `midigen_scripts/`.
+- Added `microchop_midigen/generate_midi_only.py` to call only the copied
+  MIDI generator.
+- Added `microchop_sampler.py` for chopping, pitch labeling, MIDI phrase
+  extraction, one-shot rendering, and reports.
+- Added `microchop_requirements.txt` with focused audio/MIDI dependencies.
+- Added `README.md` with setup and proof-render commands.
+- No existing source files were modified; `midigen_scripts/` was left intact.
+- 2026-05-21: Backed up `microchop_sampler.py`, `README.md`, and this log to
+  `backups/20260521_reference_render/` before adding 8-bar reference MIDI and
+  diagnostic WAV outputs for direct comparison with the microchop render.
+- 2026-05-21: Backed up `README.md` and this log to
+  `backups/20260521_youtube_readme/` before adding the YouTube walkthrough
+  thumbnail link to the GitHub README.

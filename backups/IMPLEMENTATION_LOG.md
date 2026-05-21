@@ -15,3 +15,6 @@
 - 2026-05-21: Backed up `README.md` and this log to
   `backups/20260521_youtube_readme/` before adding the YouTube walkthrough
   thumbnail link to the GitHub README.
+- 2026-05-21: Backed up `.gitignore`, `README.md`, and this log to
+  `backups/20260521_public_demo_artifacts/` before allowing only the public
+  Ableton analysis file and final microchop render under `demo_artifacts/`.
