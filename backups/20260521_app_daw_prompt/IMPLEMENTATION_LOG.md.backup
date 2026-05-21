@@ -26,6 +26,3 @@
   this log to `backups/20260521_remove_private_midigen/` before removing the
   private MIDI generation code from GitHub and changing the public workflow to
   bring-your-own MIDI.
-- 2026-05-21: Backed up this log to `backups/20260521_app_daw_prompt/` before
-  adding `app-daw/LLM_PROMPT.md` with the desktop app and future DAW plugin
-  implementation prompt.
