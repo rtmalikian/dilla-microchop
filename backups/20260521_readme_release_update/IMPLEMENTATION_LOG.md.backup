@@ -40,7 +40,3 @@
 - 2026-05-21: Renamed the public product and repository references to Melodic
   Microchop, removed tracked historical README backups with the previous brand,
   and rebuilt the app, DMG, VST3, and AU artifacts under the new name.
-- 2026-05-21: Backed up `README.md` and this log to
-  `backups/20260521_readme_release_update/` before updating the GitHub README
-  to surface the Melodic Microchop DMG, app, VST3, AU, build commands, and
-  verification status.

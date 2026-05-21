@@ -1,10 +1,12 @@
 # Melodic Microchop
 
-**Melodic Microchop** is a sample-based music production tool for creating
-melodic microchops from a legally usable audio sample, detecting the pitch of
-each tiny chop, and replaying those tuned chops from MIDI. It includes a Python
-render engine, a macOS desktop app bundle, a drag-to-Applications DMG builder,
-and a native JUCE VST3/AU plugin scaffold for DAW playback.
+**Melodic Microchop** is a Python audio and MIDI sampler tool for creating
+melodic microchops from a legally usable audio sample, detecting the
+pitch of each tiny chop, and replaying those tuned one-shot chops from a MIDI
+melody you provide. It is designed for hip-hop producers, sample-based
+beatmakers, lo-fi producers, boom-bap producers, and creative coders who want an
+offline microchop workflow that turns piano, soul, jazz, vinyl, or field-recorded
+audio into a playable MIDI-controlled chop instrument.
 
 Author: **Raphael Malikian**  
 Email: **rtmalikian@gmail.com**
@@ -15,19 +17,6 @@ Watch the Melodic Microchop video walkthrough and behind-the-scenes creation
 process for the Python microchop MIDI sampler.
 
 [Watch the behind-the-scenes creation walkthrough on YouTube](https://youtube.com/live/0w30-Ua9BlY).
-
-## Current Deliverables
-
-- Python CLI render engine for WAV/AIFF + MIDI microchop rendering.
-- PySide6 desktop render/export app.
-- Local macOS app bundle: `dist/Melodic Microchop.app`.
-- Local DMG artifact: `dist/Melodic-Microchop-macOS.dmg`.
-- Native JUCE plugin scaffold: `plugin/melodic_microchop_plugin/`.
-- Built local VST3: `plugin/melodic_microchop_plugin/build/MelodicMicrochop_artefacts/Release/VST3/Melodic Microchop.vst3`.
-- Built local AU: `plugin/melodic_microchop_plugin/build/MelodicMicrochop_artefacts/Release/AU/Melodic Microchop.component`.
-
-Generated app/plugin/release artifacts remain gitignored. Build them locally
-from the documented commands.
 
 ## What It Does
 
@@ -40,24 +29,27 @@ Melodic Microchop builds a proof-of-concept workflow for:
 - hip-hop sample chopping, lo-fi beatmaking, and boom-bap melody generation
 - offline Python audio rendering with `librosa`, `soundfile`, `numpy`, and `mido`
 
-The render engine takes an existing MIDI file, extracts a target melody track
-and bar range, and renders those MIDI notes with short tuned chops from a local
+The current POC takes an existing MIDI file, extracts a target melody track and
+bar range, and renders those MIDI notes with short one-shot chops from a local
 source sample.
 
 ## Project Status
 
-This is an active local app/plugin prototype. The public repository includes the
-source code and build scripts, while generated audio, app bundles, DMGs, and
-plugin build outputs remain local:
+This is a local proof of concept. The first version is intentionally focused:
 
 - Bring your own MIDI file; MIDI generation code is intentionally not included.
 - Recording, full production, mastering, and sample-pack pipelines are not
   invoked.
-- The Python renderer supports one-shot, gated, looped, stretched, and
-  slice-sequence playback modes.
-- The JUCE plugin scaffold builds as VST3, AU, and Standalone.
-- Plugin chopping/pitch analysis is currently placeholder C++ logic; the Python
-  renderer remains the higher-quality analysis path.
+- Playback mode is `one-shot`: MIDI note-off messages do not cut the chop.
+- Short chops are preferred over long sustained sample regions.
+- Pitch shifting is expected when exact note coverage is missing.
+
+Future playback modes to implement:
+
+- `gated`: stop playback at MIDI note-off
+- `stretch`: time-stretch chops to MIDI note duration
+- `loop`: loop a stable tonal region until note-off
+- `slice-sequence`: step through chops in order regardless of pitch
 
 ## Repository Layout
 
@@ -67,7 +59,6 @@ melodic-microchop/
 ├── microchop_desktop_app.py      # local desktop render/export app
 ├── microchop_requirements.txt    # focused Python dependencies
 ├── app-daw/                      # app packaging and DAW plugin roadmap
-├── plugin/melodic_microchop_plugin/ # native JUCE VST3/AU scaffold
 ├── original_sample/              # optional local-only sample input folder
 ├── demo_artifacts/               # public demo render and Ableton analysis file
 ├── output/                       # generated renders, chops, manifests, reports
@@ -139,58 +130,6 @@ Supported style modes are `fixed`, `round-robin`, `random-chop`,
 `random-playback`, `weighted-random`, `velocity-style`, `note-range-style`,
 `alternating-style`, and `humanized-style`.
 
-## Build The macOS App And DMG
-
-```bash
-PYINSTALLER_CONFIG_DIR=/private/tmp/microchop-pyinstaller-config \
-  ./microchop_venv/bin/pyinstaller --noconfirm --clean app-daw/microchop_desktop.spec
-
-bash app-daw/build_dmg.sh
-```
-
-Outputs:
-
-```text
-dist/Melodic Microchop.app
-dist/Melodic-Microchop-macOS.dmg
-```
-
-The DMG script creates a drag-to-Applications disk image and verifies it by
-mounting the DMG and checking for the app bundle plus `/Applications` symlink.
-
-## Build The VST3/AU Plugin
-
-```bash
-cmake -S plugin/melodic_microchop_plugin \
-  -B plugin/melodic_microchop_plugin/build \
-  -DCMAKE_BUILD_TYPE=Release
-
-cmake --build plugin/melodic_microchop_plugin/build --config Release
-```
-
-Outputs:
-
-```text
-plugin/melodic_microchop_plugin/build/MelodicMicrochop_artefacts/Release/VST3/Melodic Microchop.vst3
-plugin/melodic_microchop_plugin/build/MelodicMicrochop_artefacts/Release/AU/Melodic Microchop.component
-plugin/melodic_microchop_plugin/build/MelodicMicrochop_artefacts/Release/Standalone/Melodic Microchop.app
-```
-
-Manual install:
-
-```bash
-mkdir -p ~/Library/Audio/Plug-Ins/VST3
-mkdir -p ~/Library/Audio/Plug-Ins/Components
-cp -R plugin/melodic_microchop_plugin/build/MelodicMicrochop_artefacts/Release/VST3/Melodic\ Microchop.vst3 ~/Library/Audio/Plug-Ins/VST3/
-cp -R plugin/melodic_microchop_plugin/build/MelodicMicrochop_artefacts/Release/AU/Melodic\ Microchop.component ~/Library/Audio/Plug-Ins/Components/
-```
-
-Validate the AU:
-
-```bash
-auval -v aumu Dmcp RMal
-```
-
 Each run writes an isolated folder under `output/`:
 
 ```text
@@ -221,20 +160,6 @@ output/microchop_<timestamp>/
 10. Export the same 8-bar phrase as reference MIDI and a simple diagnostic tone WAV.
 11. Write diagnostics showing chop coverage, pitch-shift distances, and weak
     note coverage.
-
-## Verification
-
-The current local build has been verified with:
-
-- Python compile checks.
-- Synthetic render smoke check: `./microchop_venv/bin/python app-daw/smoke_check.py`.
-- Desktop app smoke launch.
-- Bundled app smoke launch.
-- DMG create and mount verification.
-- JUCE CMake configure/build.
-- VST3/AU bundle existence checks.
-- VST3/AU ad-hoc codesign verification.
-- AU validation: `auval -v aumu Dmcp RMal`.
 
 ## SEO Keywords
 
