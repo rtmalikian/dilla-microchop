@@ -18,7 +18,3 @@
 - 2026-05-21: Backed up `.gitignore`, `README.md`, and this log to
   `backups/20260521_public_demo_artifacts/` before allowing only the public
   Ableton analysis file and final microchop render under `demo_artifacts/`.
-- 2026-05-21: Backed up `README.md` and this log to
-  `backups/20260521_readme_rights_cleanup/` before removing the named local
-  proof sample path from the README and replacing the YouTube thumbnail with a
-  plain external walkthrough link.

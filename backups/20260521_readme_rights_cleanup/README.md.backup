@@ -11,12 +11,14 @@ into a playable MIDI-controlled chop instrument.
 Author: **Raphael Malikian**  
 Email: **rtmalikian@gmail.com**
 
-## Behind The Scenes Walkthrough
+## Video Walkthrough
 
 Watch the Dilla Microchop video walkthrough and behind-the-scenes creation
 process for the Python microchop MIDI sampler.
 
-[Watch the behind-the-scenes creation walkthrough on YouTube](https://youtube.com/live/0w30-Ua9BlY).
+<a href="https://youtube.com/live/0w30-Ua9BlY">
+  <img src="https://img.youtube.com/vi/0w30-Ua9BlY/maxresdefault.jpg" alt="Dilla Microchop video walkthrough and behind-the-scenes creation" width="720">
+</a>
 
 ## What It Does
 
@@ -58,7 +60,7 @@ dilla-microchop/
 ├── microchop_sampler.py          # main microchop one-shot renderer
 ├── microchop_requirements.txt    # focused Python dependencies
 ├── microchop_midigen/            # isolated MIDI-only generator copy
-├── original_sample/              # optional local-only sample input folder
+├── original_sample/              # local-only sample input folder
 ├── output/                       # generated renders, chops, manifests, reports
 └── backups/IMPLEMENTATION_LOG.md # edit and backup log
 ```
@@ -86,20 +88,22 @@ python3 -m venv microchop_venv
 ./microchop_venv/bin/python -m pip install -r microchop_requirements.txt
 ```
 
-## Local Sample Input
+## Proof Sample
 
-Place any legally usable local audio sample in `original_sample/`, or pass an
-absolute path to `--sample`. Source recordings are intentionally not included in
-this repository.
+Place the proof-of-concept WAV at:
 
-Dilla Microchop does not use the sample BPM for timing. Timing comes from the
-generated MIDI file.
+```text
+original_sample/Domenico_Scaratty_Sonata_Piano_Re_Minor_Domenico_Scarlatti_Sonata_For_Piano_D_Moll_3dHxqobZ90_Dmin_112bpm.wav
+```
+
+The sample filename says D minor at 112 BPM, but Dilla Microchop does not use the
+sample BPM for timing. Timing comes from the generated MIDI file.
 
 ## Run The Microchop Render
 
 ```bash
 ./microchop_venv/bin/python microchop_sampler.py \
-  --sample original_sample/your_local_sample.wav \
+  --sample original_sample/Domenico_Scaratty_Sonata_Piano_Re_Minor_Domenico_Scarlatti_Sonata_For_Piano_D_Moll_3dHxqobZ90_Dmin_112bpm.wav \
   --generate-midi \
   --target-track "Main Melody" \
   --bar-start 8 \
