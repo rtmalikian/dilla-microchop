@@ -12,6 +12,3 @@
 - 2026-05-21: Backed up `microchop_sampler.py`, `README.md`, and this log to
   `backups/20260521_reference_render/` before adding 8-bar reference MIDI and
   diagnostic WAV outputs for direct comparison with the microchop render.
-- 2026-05-21: Backed up `README.md` and this log to
-  `backups/20260521_youtube_readme/` before adding the YouTube walkthrough
-  thumbnail link to the GitHub README.

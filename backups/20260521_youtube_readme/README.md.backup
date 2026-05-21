@@ -11,15 +11,6 @@ into a playable MIDI-controlled chop instrument.
 Author: **Raphael Malikian**  
 Email: **rtmalikian@gmail.com**
 
-## Video Walkthrough
-
-Watch the Dilla Microchop video walkthrough and behind-the-scenes creation
-process for the Python microchop MIDI sampler.
-
-<a href="https://youtube.com/live/0w30-Ua9BlY">
-  <img src="https://img.youtube.com/vi/0w30-Ua9BlY/maxresdefault.jpg" alt="Dilla Microchop video walkthrough and behind-the-scenes creation" width="720">
-</a>
-
 ## What It Does
 
 Dilla Microchop builds a proof-of-concept workflow for:
