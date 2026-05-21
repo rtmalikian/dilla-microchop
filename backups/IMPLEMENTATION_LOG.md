@@ -22,3 +22,7 @@
   `backups/20260521_readme_rights_cleanup/` before removing the named local
   proof sample path from the README and replacing the YouTube thumbnail with a
   plain external walkthrough link.
+- 2026-05-21: Backed up `microchop_sampler.py`, `README.md`, `.gitignore`, and
+  this log to `backups/20260521_remove_private_midigen/` before removing the
+  private MIDI generation code from GitHub and changing the public workflow to
+  bring-your-own MIDI.

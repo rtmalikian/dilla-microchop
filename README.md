@@ -1,12 +1,12 @@
 # Dilla Microchop
 
 **Dilla Microchop** is a Python audio and MIDI sampler tool for creating
-J Dilla-inspired microchops from an audio sample, detecting the pitch of each
-tiny chop, and replaying those tuned one-shot chops from a generated MIDI
-melody. It is designed for hip-hop producers, sample-based beatmakers, lo-fi
-producers, boom-bap producers, and creative coders who want an offline
-microchop workflow that turns piano, soul, jazz, vinyl, or field-recorded audio
-into a playable MIDI-controlled chop instrument.
+J Dilla-inspired microchops from a legally usable audio sample, detecting the
+pitch of each tiny chop, and replaying those tuned one-shot chops from a MIDI
+melody you provide. It is designed for hip-hop producers, sample-based
+beatmakers, lo-fi producers, boom-bap producers, and creative coders who want an
+offline microchop workflow that turns piano, soul, jazz, vinyl, or field-recorded
+audio into a playable MIDI-controlled chop instrument.
 
 Author: **Raphael Malikian**  
 Email: **rtmalikian@gmail.com**
@@ -29,17 +29,17 @@ Dilla Microchop builds a proof-of-concept workflow for:
 - hip-hop sample chopping, lo-fi beatmaking, and boom-bap melody generation
 - offline Python audio rendering with `librosa`, `soundfile`, `numpy`, and `mido`
 
-The current POC generates a melodic multi-track MIDI song, extracts `Main Melody`
-bars 8-16, and renders those verse melody notes with short one-shot chops from a
-local source sample.
+The current POC takes an existing MIDI file, extracts a target melody track and
+bar range, and renders those MIDI notes with short one-shot chops from a local
+source sample.
 
 ## Project Status
 
 This is a local proof of concept. The first version is intentionally focused:
 
-- The MIDI generator is isolated in `microchop_midigen/`.
-- The Fantom recording, full production, mastering, and sample-pack pipeline are
-  not invoked.
+- Bring your own MIDI file; MIDI generation code is intentionally not included.
+- Recording, full production, mastering, and sample-pack pipelines are not
+  invoked.
 - Playback mode is `one-shot`: MIDI note-off messages do not cut the chop.
 - Short chops are preferred over long sustained sample regions.
 - Pitch shifting is expected when exact note coverage is missing.
@@ -57,8 +57,8 @@ Future playback modes to implement:
 dilla-microchop/
 ├── microchop_sampler.py          # main microchop one-shot renderer
 ├── microchop_requirements.txt    # focused Python dependencies
-├── microchop_midigen/            # isolated MIDI-only generator copy
 ├── original_sample/              # optional local-only sample input folder
+├── demo_artifacts/               # public demo render and Ableton analysis file
 ├── output/                       # generated renders, chops, manifests, reports
 └── backups/IMPLEMENTATION_LOG.md # edit and backup log
 ```
@@ -89,18 +89,19 @@ python3 -m venv microchop_venv
 ## Local Sample Input
 
 Place any legally usable local audio sample in `original_sample/`, or pass an
-absolute path to `--sample`. Source recordings are intentionally not included in
-this repository.
+absolute path to `--sample`. Pass any compatible MIDI file to `--midi`. Source
+recordings, private MIDI generators, and generated chop libraries are
+intentionally not included in this repository.
 
 Dilla Microchop does not use the sample BPM for timing. Timing comes from the
-generated MIDI file.
+provided MIDI file.
 
 ## Run The Microchop Render
 
 ```bash
 ./microchop_venv/bin/python microchop_sampler.py \
   --sample original_sample/your_local_sample.wav \
-  --generate-midi \
+  --midi path/to/your_melody.mid \
   --target-track "Main Melody" \
   --bar-start 8 \
   --bar-count 8 \
@@ -112,7 +113,7 @@ Each run writes an isolated folder under `output/`:
 
 ```text
 output/microchop_<timestamp>/
-├── midi/generated.mid
+├── midi/input.mid
 ├── chops/*.wav
 ├── manifests/chops.json
 ├── renders/main_melody_bars_8_16_microchop.wav
@@ -126,7 +127,7 @@ output/microchop_<timestamp>/
 
 ## How The Sampler Works
 
-1. Generate or load a MIDI file.
+1. Load the MIDI file you provide.
 2. Parse tempo and time signature from the MIDI.
 3. Select `Main Melody` bars 8-16.
 4. Detect short audio chop boundaries from the source sample.

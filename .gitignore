@@ -4,8 +4,9 @@ __pycache__/
 
 microchop_venv/
 output/
-microchop_midigen/output/
+microchop_midigen/
 midigen_scripts/
+backups/20260521_remove_private_midigen/
 
 # Keep proof-of-concept source recordings local unless rights are cleared.
 original_sample/

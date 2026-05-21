@@ -8,7 +8,6 @@ import json
 import math
 import random
 import shutil
-import sys
 from collections import defaultdict
 from dataclasses import dataclass
 from datetime import datetime
@@ -215,28 +214,13 @@ def make_chops(args: argparse.Namespace, run_dir: Path) -> list[dict[str, Any]]:
     return manifest
 
 
-def generate_midi_into(run_dir: Path) -> Path:
-    midi_dir = run_dir / "midi"
-    midi_dir.mkdir(parents=True, exist_ok=True)
-    sys.path.insert(0, str(Path(__file__).resolve().parent / "microchop_midigen"))
-    from generate_midi_only import generate
-
-    midi_path, _metadata = generate(str(midi_dir))
-    generated = Path(midi_path)
-    canonical = midi_dir / "generated.mid"
-    if generated != canonical:
-        shutil.copy2(generated, canonical)
-    return canonical
-
-
 def copy_midi_into(midi_path: Path, run_dir: Path) -> Path:
+    if not midi_path.exists():
+        raise FileNotFoundError(f"MIDI file not found: {midi_path}")
     midi_dir = run_dir / "midi"
     midi_dir.mkdir(parents=True, exist_ok=True)
-    target = midi_dir / midi_path.name
-    shutil.copy2(midi_path, target)
-    canonical = midi_dir / "generated.mid"
-    if target != canonical:
-        shutil.copy2(target, canonical)
+    canonical = midi_dir / "input.mid"
+    shutil.copy2(midi_path, canonical)
     return canonical
 
 
@@ -627,8 +611,7 @@ def write_reports(
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Render MIDI melody with tuned one-shot microchops")
     parser.add_argument("--sample", default=DEFAULT_SAMPLE)
-    parser.add_argument("--midi", default=None)
-    parser.add_argument("--generate-midi", action="store_true", default=False)
+    parser.add_argument("--midi", required=True, help="Path to the MIDI file whose melody track will trigger microchops")
     parser.add_argument("--target-track", default="Main Melody")
     parser.add_argument("--bar-start", type=int, default=8)
     parser.add_argument("--bar-count", type=int, default=8)
@@ -648,8 +631,6 @@ def main() -> None:
     args = parse_args()
     random.seed(args.seed)
     np.random.seed(args.seed)
-    if not args.generate_midi and not args.midi:
-        args.generate_midi = True
 
     run_dir = Path(args.output_dir or Path("output") / f"microchop_{datetime.now().strftime('%Y%m%d_%H%M%S')}")
     run_dir.mkdir(parents=True, exist_ok=True)
@@ -658,7 +639,7 @@ def main() -> None:
     if not sample_path.exists():
         raise FileNotFoundError(f"Sample not found: {sample_path}")
 
-    midi_path = generate_midi_into(run_dir) if args.generate_midi else copy_midi_into(Path(args.midi), run_dir)
+    midi_path = copy_midi_into(Path(args.midi), run_dir)
     chops = make_chops(args, run_dir)
     midi_events, midi_info = extract_midi_events(midi_path, args.target_track, args.bar_start, args.bar_count)
     render_path, event_map, render_stats = render_events(args, run_dir, midi_events, chops)
