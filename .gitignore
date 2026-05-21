@@ -1,0 +1,20 @@
+.DS_Store
+__pycache__/
+*.py[cod]
+
+microchop_venv/
+output/
+microchop_midigen/output/
+midigen_scripts/
+
+# Keep proof-of-concept source recordings local unless rights are cleared.
+original_sample/
+
+# Large or generated audio artifacts.
+*.wav
+*.aif
+*.aiff
+*.mp3
+*.flac
+*.mid
+*.midi
