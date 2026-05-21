@@ -86,7 +86,7 @@ def assert_render(config: RenderConfig) -> list[dict[str, object]]:
 
 
 def main() -> None:
-    with tempfile.TemporaryDirectory(prefix="dilla-microchop-smoke-") as tmp:
+    with tempfile.TemporaryDirectory(prefix="melodic-microchop-smoke-") as tmp:
         root = Path(tmp)
         sample = root / "synthetic_sample.wav"
         midi = root / "synthetic.mid"

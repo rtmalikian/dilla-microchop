@@ -30,7 +30,7 @@ exe = EXE(
     a.scripts,
     [],
     exclude_binaries=True,
-    name="Dilla Microchop",
+    name="Melodic Microchop",
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
@@ -51,12 +51,12 @@ coll = COLLECT(
     strip=False,
     upx=True,
     upx_exclude=[],
-    name="Dilla Microchop",
+    name="Melodic Microchop",
 )
 
 app = BUNDLE(
     coll,
-    name="Dilla Microchop.app",
+    name="Melodic Microchop.app",
     icon=None,
-    bundle_identifier="com.raphaelmalikian.dillamicrochop",
+    bundle_identifier="com.raphaelmalikian.melodicmicrochop",
 )

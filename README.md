@@ -1,7 +1,7 @@
-# Dilla Microchop
+# Melodic Microchop
 
-**Dilla Microchop** is a Python audio and MIDI sampler tool for creating
-J Dilla-inspired microchops from a legally usable audio sample, detecting the
+**Melodic Microchop** is a Python audio and MIDI sampler tool for creating
+melodic microchops from a legally usable audio sample, detecting the
 pitch of each tiny chop, and replaying those tuned one-shot chops from a MIDI
 melody you provide. It is designed for hip-hop producers, sample-based
 beatmakers, lo-fi producers, boom-bap producers, and creative coders who want an
@@ -13,16 +13,16 @@ Email: **rtmalikian@gmail.com**
 
 ## Behind The Scenes Walkthrough
 
-Watch the Dilla Microchop video walkthrough and behind-the-scenes creation
+Watch the Melodic Microchop video walkthrough and behind-the-scenes creation
 process for the Python microchop MIDI sampler.
 
 [Watch the behind-the-scenes creation walkthrough on YouTube](https://youtube.com/live/0w30-Ua9BlY).
 
 ## What It Does
 
-Dilla Microchop builds a proof-of-concept workflow for:
+Melodic Microchop builds a proof-of-concept workflow for:
 
-- Dilla-style microchopping and tiny audio slice generation
+- melodic microchopping and tiny audio slice generation
 - tuned one-shot sample playback from MIDI notes
 - automatic pitch detection for chopped audio
 - MIDI melody replacement using sample chops instead of a synthesizer
@@ -54,7 +54,7 @@ Future playback modes to implement:
 ## Repository Layout
 
 ```text
-dilla-microchop/
+melodic-microchop/
 ├── microchop_sampler.py          # main microchop one-shot renderer
 ├── microchop_desktop_app.py      # local desktop render/export app
 ├── microchop_requirements.txt    # focused Python dependencies
@@ -95,7 +95,7 @@ absolute path to `--sample`. Pass any compatible MIDI file to `--midi`. Source
 recordings, private MIDI generators, and generated chop libraries are
 intentionally not included in this repository.
 
-Dilla Microchop does not use the sample BPM for timing. Timing comes from the
+Melodic Microchop does not use the sample BPM for timing. Timing comes from the
 provided MIDI file.
 
 ## Run The Microchop Render
@@ -163,7 +163,7 @@ output/microchop_<timestamp>/
 
 ## SEO Keywords
 
-J Dilla microchop sampler, Dilla-style sample chopping, Python audio sampler,
+melodic microchop sampler, melodic sample chopping, Python audio sampler,
 MIDI sample playback, tuned microchops, hip-hop production tool, boom-bap sample
 chopper, lo-fi beatmaking Python, microchop MIDI instrument, automatic pitch
 detection for samples, one-shot sampler renderer, sample-based music production,

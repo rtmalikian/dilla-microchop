@@ -1,6 +1,6 @@
-# Dilla Microchop App And DAW Packaging
+# Melodic Microchop App And DAW Packaging
 
-This folder tracks the application and DAW-plugin direction for Dilla Microchop.
+This folder tracks the application and DAW-plugin direction for Melodic Microchop.
 The first implemented app target is a local desktop render/export wrapper around
 the shared Python renderer.
 
@@ -69,14 +69,48 @@ PYINSTALLER_CONFIG_DIR=/private/tmp/microchop-pyinstaller-config \
   ./microchop_venv/bin/pyinstaller --noconfirm --clean app-daw/microchop_desktop.spec
 ```
 
-The app bundle will be written under `dist/Dilla Microchop.app`. Build outputs
+The app bundle will be written under `dist/Melodic Microchop.app`. Build outputs
 must remain local and should not be committed.
 
-## Future DAW Plugin
+Build the drag-to-Applications DMG:
 
-The plugin should be a later JUCE or iPlug2 product that loads prepared chop
-kits exported by the desktop app. The plugin should not run onset detection,
-librosa pitch analysis, or batch rendering in the DAW audio thread.
+```bash
+bash app-daw/build_dmg.sh
+```
+
+The script creates `dist/Melodic-Microchop-macOS.dmg`, mounts it to verify the app
+bundle and `/Applications` symlink, then detaches it.
+
+## DAW Plugin
+
+The native plugin scaffold lives in `plugin/melodic_microchop_plugin/`. It uses
+JUCE `8.0.12` through CMake `FetchContent` and targets VST3, AU, and Standalone
+debug builds.
+
+Configure and build:
+
+```bash
+cmake -S plugin/melodic_microchop_plugin -B plugin/melodic_microchop_plugin/build -DCMAKE_BUILD_TYPE=Release
+cmake --build plugin/melodic_microchop_plugin/build --config Release
+```
+
+Manual install paths:
+
+```bash
+mkdir -p ~/Library/Audio/Plug-Ins/VST3
+mkdir -p ~/Library/Audio/Plug-Ins/Components
+cp -R plugin/melodic_microchop_plugin/build/MelodicMicrochop_artefacts/Release/VST3/Melodic\ Microchop.vst3 ~/Library/Audio/Plug-Ins/VST3/
+cp -R plugin/melodic_microchop_plugin/build/MelodicMicrochop_artefacts/Release/AU/Melodic\ Microchop.component ~/Library/Audio/Plug-Ins/Components/
+```
+
+Validate the AU:
+
+```bash
+auval -v aumu Dmcp RMal
+```
+
+The plugin performs sample loading and placeholder chop analysis on a background
+thread. The audio callback only handles MIDI-triggered playback and mixing.
 
 ## Rights Boundary
 
@@ -97,4 +131,12 @@ session:
 
 ```bash
 QT_QPA_PLATFORM=offscreen ./microchop_venv/bin/python microchop_desktop_app.py --smoke-window
+```
+
+Verify plugin source files are present:
+
+```bash
+test -f plugin/melodic_microchop_plugin/CMakeLists.txt
+test -f plugin/melodic_microchop_plugin/Source/PluginProcessor.cpp
+test -f plugin/melodic_microchop_plugin/Source/PluginEditor.cpp
 ```

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""PySide6 desktop render/export app for Dilla Microchop."""
+"""PySide6 desktop render/export app for Melodic Microchop."""
 
 from __future__ import annotations
 
@@ -53,7 +53,7 @@ class MicrochopWindow(QMainWindow):
         super().__init__()
         self.thread: QThread | None = None
         self.worker: RenderWorker | None = None
-        self.setWindowTitle("Dilla Microchop")
+        self.setWindowTitle("Melodic Microchop")
         self.resize(820, 720)
         self._build_ui()
 

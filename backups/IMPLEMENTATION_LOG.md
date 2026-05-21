@@ -34,3 +34,9 @@
   `backups/20260521_app_daw_implementation/` before implementing the shared
   render entry point, desktop app wrapper, playback/style mode expansion, and
   app packaging documentation.
+- 2026-05-21: Backed up `app-daw/README.md`, `.gitignore`, and this log to
+  `backups/20260521_dmg_vst_plan_implementation/` before adding the DMG builder
+  and native JUCE VST3/AU plugin scaffold.
+- 2026-05-21: Renamed the public product and repository references to Melodic
+  Microchop, removed tracked historical README backups with the previous brand,
+  and rebuilt the app, DMG, VST3, and AU artifacts under the new name.

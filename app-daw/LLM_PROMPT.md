@@ -1,4 +1,4 @@
-# Dilla Microchop App And DAW Implementation Prompt
+# Melodic Microchop App And DAW Implementation Prompt
 
 ## Role And Persona
 
@@ -14,7 +14,7 @@ generated audio assets.
 
 ## Project Context
 
-The project is **Dilla Microchop**, a Python tool that creates J Dilla-inspired
+The project is **Melodic Microchop**, a Python tool that creates melodic
 microchops from a user-supplied audio sample and maps those tuned chops to a
 user-supplied MIDI melody.
 
@@ -37,7 +37,7 @@ generated chop libraries, or local render folders.
 
 ## Primary Goal
 
-Package Dilla Microchop into a user-facing product in stages:
+Package Melodic Microchop into a user-facing product in stages:
 
 1. Build a macOS desktop render/export app first.
 2. Define a portable chop kit export format.
