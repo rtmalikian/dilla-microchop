@@ -42,7 +42,9 @@ Melodic Microchop builds a proof-of-concept workflow for:
 
 The render engine takes an existing MIDI file, extracts a target melody track
 and bar range, and renders those MIDI notes with short tuned chops from a local
-source sample.
+source sample. Render WAV filenames are derived from the selected track name
+using a filesystem-safe stem so unusual MIDI track names cannot create nested
+output paths.
 
 ## Project Status
 

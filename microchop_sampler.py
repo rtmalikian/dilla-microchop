@@ -7,6 +7,7 @@ import argparse
 import json
 import math
 import random
+import re
 import shutil
 from collections import defaultdict
 from dataclasses import asdict, dataclass
@@ -172,6 +173,11 @@ def equal_power_pan(audio: np.ndarray, pan: float) -> np.ndarray:
 
 def parse_csv(value: str) -> list[str]:
     return [item.strip() for item in value.split(",") if item.strip()]
+
+
+def safe_render_stem(track_name: str) -> str:
+    stem = re.sub(r"[^A-Za-z0-9]+", "_", track_name.lower()).strip("_")
+    return stem or "track"
 
 
 def parse_weighted_modes(value: str) -> list[tuple[str, float]]:
@@ -799,7 +805,7 @@ def render_events(
         mix = mix[: min(mix.shape[0], int(non_silent[-1]) + tail)]
     renders_dir = run_dir / "renders"
     renders_dir.mkdir(parents=True, exist_ok=True)
-    render_path = renders_dir / f"{args.target_track.lower().replace(' ', '_')}_bars_{args.bar_start}_{args.bar_start + args.bar_count}_microchop.wav"
+    render_path = renders_dir / f"{safe_render_stem(args.target_track)}_bars_{args.bar_start}_{args.bar_start + args.bar_count}_microchop.wav"
     sf.write(render_path, mix, sr)
     (renders_dir / "note_event_map.json").write_text(json.dumps(rendered_map, indent=2) + "\n")
     stats = {
