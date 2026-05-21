@@ -9,7 +9,7 @@ import traceback
 from dataclasses import asdict
 from pathlib import Path
 
-from PySide6.QtCore import QObject, QThread, Signal
+from PySide6.QtCore import QObject, QThread, QTimer, Signal
 from PySide6.QtWidgets import (
     QApplication,
     QComboBox,
@@ -213,6 +213,10 @@ class MicrochopWindow(QMainWindow):
 def main() -> int:
     app = QApplication(sys.argv)
     window = MicrochopWindow()
+    if "--smoke-window" in sys.argv:
+        print(window.windowTitle())
+        QTimer.singleShot(0, app.quit)
+        return app.exec()
     window.show()
     return app.exec()
 

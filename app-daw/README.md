@@ -91,3 +91,10 @@ temporary folder:
 ```bash
 ./microchop_venv/bin/python app-daw/smoke_check.py
 ```
+
+Verify the desktop window can be constructed without opening an interactive
+session:
+
+```bash
+QT_QPA_PLATFORM=offscreen ./microchop_venv/bin/python microchop_desktop_app.py --smoke-window
+```
